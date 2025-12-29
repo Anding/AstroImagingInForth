@@ -1,7 +1,7 @@
 \ setup a particular rig at a particular observatory
 
 \ the Setup file integrates the particular hardware and provides a user lexicon
-include "%idir%\Setup001.f"
+include "%idir%\User001.f"
 
 \ 10Micron fixed IP address
 192 168 0 15 toIPv4 -> 10Micron.IP				

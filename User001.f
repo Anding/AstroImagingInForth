@@ -90,6 +90,19 @@ NEED ForthXISF
 	-> obs.type
 ;
 
+: focus-is ( -- pos)
+	focuser_positon
+;	
+
+: focus-at ( pos --)
+	->focuser_position 
+;
+
+: focus-move ( delta --)
+	focuser_positon + 
+	->focuser_position
+;
+
 : goto ( RA Dec --)
 \ slew the mount to an equatorial coordinate
 	->mount_equatorial ( RA DEC --)
