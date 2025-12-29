@@ -1,4 +1,4 @@
-\ integrate the hardware (camera, focuser, filter-wheel and the mount) to create a user lexionary for astroimaging
+\ integrate the hardware (camera, focuser, filter-wheel and the mount) to create a user lexionary for interactive astroimaging
 
 NEED SHARED
 NEED Forth-map
@@ -13,15 +13,17 @@ NEED ForthXISF
 0 SHARED value image						\ pointer to a ForthXISF image structure
 
 0 SHARED value exposure.duration		\ exposure duration in micro seconds
+0 SHARED value focuser.default		\ typical optimum focus position
 
 
 : connect ( --)
 \ connect all hardware	
 
 	\ activate the camera
-	scan-cameras
+	scan-cameras 
 	0 add-camera
 	0 use-camera
+	camera_pixels ( width height) -> sensor.height -> sensor.width		
 	
 	\ activate the filter wheel
 	scan-wheels
@@ -36,14 +38,6 @@ NEED ForthXISF
 	\ connect to the mount
 	add-mount	
 	
-	\ obtain the size of the camera sensor and allocate an image buffer with descriptor, and forth-maps
-	camera_pixels ( width height) -> sensor.height -> sensor.width	
-	
-	\ allocate the ForthXISF image structure
-	sensor.width sensor.height 1 allocate-image ( img) -> image		
-	map ( forth-map) image FITS_map !
-	map ( forth-map) image XISF_map !	
-	
 ;
 
 : check ( --)
@@ -55,6 +49,7 @@ NEED ForthXISF
 
 	0 ->wheel_position	
 	0 remove-wheel	
+\  focuser.default ->focuser_position
 	0 remove-focuser
 	0 remove-camera	
 	remove-mount
@@ -90,17 +85,25 @@ NEED ForthXISF
 	-> obs.type
 ;
 
-: focus-is ( -- pos)
-	focuser_positon
-;	
-
-: focus-at ( pos --)
+: focus-to ( pos --)
 	->focuser_position 
 ;
 
-: focus-move ( delta --)
-	focuser_positon + 
+: focus-by ( delta --)
+	focuser_position + 
 	->focuser_position
+;
+
+: focus? ( -- pos)
+	focuser_position cr . cr
+;	
+
+: filter ( pos --)
+	->wheel_position
+;
+
+: filter? ( --)
+	wheel_position FITSfilterBand cr type cr
 ;
 
 : goto ( RA Dec --)
@@ -108,14 +111,12 @@ NEED ForthXISF
 	->mount_equatorial ( RA DEC --)
 ;
 
-: location ( -- RA Dec)
+: goto? ( --)
 \ obtain the mount position in equatorial coordinates
-	mount_equatorial
+	mount_equatorial swap CR ~~~. ~~~. CR
 ;
 
-: location? ( --)
-	\ print the mount position in equatorial coordinates
-	mount_equatorial swap ( Dec RA)
-	CR ~~~. ~~~. 
+: object ( caddr u --)
+	$-> obs.object
 ;
 
