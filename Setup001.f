@@ -1,4 +1,4 @@
-\ integrate the camera, focuser, filter-wheel and the mount to create a user lexionary for astroimaging
+\ integrate the hardware (camera, focuser, filter-wheel and the mount) to create a user lexionary for astroimaging
 
 NEED SHARED
 NEED Forth-map
@@ -14,7 +14,9 @@ NEED ForthXISF
 
 0 SHARED value exposure.duration		\ exposure duration in micro seconds
 
-: intitialize
+
+: connect ( --)
+\ connect all hardware	
 
 	\ activate the camera
 	scan-cameras
@@ -31,6 +33,9 @@ NEED ForthXISF
 	0 add-focuser
 	0 use-focuser
 	
+	\ connect to the mount
+	add-mount	
+	
 	\ obtain the size of the camera sensor and allocate an image buffer with descriptor, and forth-maps
 	camera_pixels ( width height) -> sensor.height -> sensor.width	
 	
@@ -41,7 +46,21 @@ NEED ForthXISF
 	
 ;
 
-: expose
+: check ( --)
+\ check all hardware connections	
+;
+
+: disconnect ( --)
+\ disocnnect all hardware
+
+	0 ->wheel_position	
+	0 remove-wheel	
+	0 remove-focuser
+	0 remove-camera	
+	remove-mount
+;
+
+: expose ( --)
 \ take an image
 	exposure.duration ->camera_exposure
 	start-exposure
@@ -61,4 +80,29 @@ NEED ForthXISF
 	image save-image						\ 
 ;
 
+: duration ( us --)
+\ set the exposure duration
+	-> exposure.duration
+;
+
+: frames	( n --) 	\ see ForthXISF\properties_obs.f
+\ set the bias, dark, flat, light frame type
+	-> obs.type
+;
+
+: goto ( RA Dec --)
+\ slew the mount to an equatorial coordinate
+	->mount_equatorial ( RA DEC --)
+;
+
+: location ( -- RA Dec)
+\ obtain the mount position in equatorial coordinates
+	mount_equatorial
+;
+
+: location? ( --)
+	\ print the mount position in equatorial coordinates
+	mount_equatorial swap ( Dec RA)
+	CR ~~~. ~~~. 
+;
 
