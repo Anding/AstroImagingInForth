@@ -1,6 +1,5 @@
 \ integrate the hardware (camera, focuser, filter-wheel and the mount) to create a user lexionary for interactive astroimaging
 
-NEED SHARED
 NEED Forth-map
 NEED ForthASI
 NEED ForthEFW
@@ -8,22 +7,16 @@ NEED ForthEAF
 NEED Forth10Micron
 NEED ForthXISF
 
-0 SHARED value sensor.width			\ camera pixesl	
-0 SHARED value sensor.height			\ camera pixels
-0 SHARED value image						\ pointer to a ForthXISF image structure
-
-0 SHARED value exposure.duration		\ exposure duration in micro seconds
-0 SHARED value focuser.default		\ typical optimum focus position
-
+0 value image							\ pointer to a ForthXISF image structure
+2 Secs value exposure.duration	\ exposure duration in micro seconds
 
 : connect ( --)
 \ connect all hardware	
-
 	\ activate the camera
 	scan-cameras 
 	0 add-camera
 	0 use-camera
-	camera_pixels ( width height) -> sensor.height -> sensor.width		
+
 	
 	\ activate the filter wheel
 	scan-wheels
@@ -42,14 +35,16 @@ NEED ForthXISF
 
 : check ( --)
 \ check all hardware connections	
+	check-wheel
+	check-focuser
+	check-camera
+	check-mount
 ;
 
 : disconnect ( --)
-\ disocnnect all hardware
+\ disconnect all hardware
 
-	0 ->wheel_position	
 	0 remove-wheel	
-\  focuser.default ->focuser_position
 	0 remove-focuser
 	0 remove-camera	
 	remove-mount
@@ -69,10 +64,12 @@ NEED ForthXISF
  	image FITS_MAP @ add-wheelFITS
  	image FITS_MAP @ add-focuserFITS	
  	image FITS_MAP @ add-mountFITS
+ 	
  	\ wait for the exposure to complete
-	camera_exposure 1000 / 100 + ms	
+	\ camera_exposure 1000 / 100 + ms	
 	image IMAGE_BITMAP image image_size ( addr n) download-image
-	image save-image						\ 
+	image save-image					
+	CR image FILEPATH_BUFFER buffer-to-string type
 ;
 
 : duration ( us --)
@@ -80,18 +77,28 @@ NEED ForthXISF
 	-> exposure.duration
 ;
 
+: duration? ( -- us)
+	exposure.duration cr . cr
+;
+
 : frames	( n --) 	\ see ForthXISF\properties_obs.f
 \ set the bias, dark, flat, light frame type
 	-> obs.type
 ;
 
+: frames? ( --)
+	obs.type observationType
+;
+
 : focus-to ( pos --)
 	->focuser_position 
+	wait-focuser
 ;
 
 : focus-by ( delta --)
 	focuser_position + 
 	->focuser_position
+	wait-focuser
 ;
 
 : focus? ( -- pos)
@@ -100,6 +107,7 @@ NEED ForthXISF
 
 : filter ( pos --)
 	->wheel_position
+	wait-wheel
 ;
 
 : filter? ( --)
