@@ -8,7 +8,7 @@ NEED Forth10Micron
 NEED ForthXISF
 
 0 value image							\ pointer to a ForthXISF image structure
-2 Secs value exposure.duration	\ exposure duration in micro seconds
+20 Secs value exposure.duration	\ exposure duration in micro seconds
 
 : connect ( --)
 \ connect all hardware	
@@ -67,8 +67,8 @@ NEED ForthXISF
  	\ wait for the exposure to complete
 	\ camera_exposure 1000 / 100 + ms	
 	image IMAGE_BITMAP image image_size ( addr n) download-image
-	image save-image					
-	CR image FILEPATH_BUFFER buffer-to-string type
+	image save-XISFimage					
+	CR image XISF_FILEPATH_BUFFER buffer-to-string type
 ;
 
 : duration ( us --)

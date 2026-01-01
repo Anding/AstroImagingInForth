@@ -2,19 +2,24 @@
 
 \ the user file integrates the hardware (camera, focuser, filter-wheel and the mount) to create a user lexionary for interactive astroimaging
 include "%idir%\User001.f"
+include "%idir%\User002.f"
 
 \ define local values for this rig at this observatory
-2340	value focuser.default.position		\ typical focus position
+2570	value focuser.default.position		\ typical focus position
 6000  value focuser.default.maxsteps		\ just within full range of travel, to protect the telescope
 80		value focuser.default.backlash		\ as measured by experiment on this rig
 0			value focuser.default.reverse			\ focuser reverse depends on mounting direction
+200		value camera.default.gain
+1			value camera.default.offset
 
 \ populate expected hardware values (mainly for FITS key information)
 192 168 0 15 toIPv4 -> 10Micron.IP						
-160 -> rig.aperature_dia
-17000 -> rig.aperature_area
-530 -> rig.focal_len
-s" 4.2 um/step" $-> focuser.stepsize
+10 secs -> exposure.duration
+s" 160.0"		 	$-> rig.aperature_dia
+s" 17000.0" 	$-> rig.aperature_area
+s" 530.0"			$-> rig.focal_len
+s" 3.3"				$-> rig.focal_ratio
+s" 4.2" 			$-> focuser.stepsize \ um / step
 s" Takahashi Epsilon 160ED " $-> rig.telescope
 s" github.com/Anding/AstroImagingInForth" $-> rig.software
 s" Anding" $-> obs.observer
@@ -25,6 +30,8 @@ s" Anding" $-> obs.observer
 	focuser.default.backlash ->focuser_backlash
 	focuser.default.maxsteps ->focuser_maxsteps
 	focuser.default.position ->focuser_position	
+	camera.default.gain ->camera_gain
+	camera.default.offset ->camera_offset
 	\ allocate the ForthXISF image structure depending on the camera sensor size
 	camera_pixels 1 ( width height bitplanes) allocate-image ( img) -> image		
 	map ( forth-map) image FITS_map !
@@ -73,7 +80,7 @@ END-ENUMS
 ASSIGN DB_FITSfilterSpec TO-DO FITSfilterSpec
 
 \ ForthXISF save-file file/path names
-: DB_write-filepath_buffer { map buf -- }
+: DB_write-XISFfilepath_buffer { map buf -- }
 
 	\ directory
 	s" e:\images\" buf write-buffer drop
@@ -96,5 +103,5 @@ ASSIGN DB_FITSfilterSpec TO-DO FITSfilterSpec
 	s" .xisf" buf write-buffer drop
 ;
 
-	ASSIGN DB_write-filepath_buffer TO-DO write-filepath_buffer
+	ASSIGN DB_write-XISFfilepath_buffer TO-DO write-XISFfilepath_buffer
 	
