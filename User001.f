@@ -113,6 +113,16 @@ NEED ForthXISF
 	wheel_position FITSfilterBand cr type cr
 ;
 
+: unpark ( --)
+	10u.unpark
+	10u.StartTracking
+;
+
+: park
+	10u.park
+;
+		
+
 : goto ( RA Dec --)
 \ slew the mount to an equatorial coordinate
 	->mount_equatorial ( RA DEC --)
