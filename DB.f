@@ -34,6 +34,7 @@ s" Anding" $-> obs.observer
 : finalize
 		0 ->wheel_position
 		focuser.default.position ->focuser_position	
+		image free-image
 ;
 
 \ filter wheel settings
