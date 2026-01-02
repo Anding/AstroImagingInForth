@@ -2,19 +2,19 @@
 
 \ the user file integrates the hardware (camera, focuser, filter-wheel and the mount) to create a user lexionary for interactive astroimaging
 include "%idir%\User001.f"
-include "%idir%\User002.f"
 
 \ define local values for this rig at this observatory
 2570	value focuser.default.position		\ typical focus position
 6000  value focuser.default.maxsteps		\ just within full range of travel, to protect the telescope
 80		value focuser.default.backlash		\ as measured by experiment on this rig
 0			value focuser.default.reverse			\ focuser reverse depends on mounting direction
-200		value camera.default.gain
+100		value camera.default.gain
 1			value camera.default.offset
+light frames
 
 \ populate expected hardware values (mainly for FITS key information)
 192 168 0 15 toIPv4 -> 10Micron.IP						
-10 secs -> exposure.duration
+20 secs -> exposure.duration
 s" 160.0"		 	$-> rig.aperature_dia
 s" 17000.0" 	$-> rig.aperature_area
 s" 530.0"			$-> rig.focal_len
