@@ -9,7 +9,7 @@ include "%idir%\User001.f"
 80		value focuser.default.backlash		\ as measured by experiment on this rig
 0			value focuser.default.reverse			\ focuser reverse depends on mounting direction
 100		value camera.default.gain
-1			value camera.default.offset
+0			value camera.default.offset
 light frames
 
 \ populate expected hardware values (mainly for FITS key information)
@@ -39,7 +39,9 @@ s" Anding" $-> obs.observer
 ;
 
 : finalize
+		wait-wheel
 		0 ->wheel_position
+		wait-focuser
 		focuser.default.position ->focuser_position	
 		image free-image
 ;

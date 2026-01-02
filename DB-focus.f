@@ -1,7 +1,7 @@
-include "%idir%\DB.f"
+ include "%idir%\DB.f"
 
-11 value autofocus.points			\ prefer an odd number
-20 value autofocus.increment
+21 value autofocus.points			\ prefer an odd number
+10 value autofocus.increment
 
 NEED ForthASTAP
 
@@ -15,7 +15,8 @@ NEED ForthASTAP
 	 ." and expose"
 	 exposeFITS
 	autofocus.increment +loop
-	focuser.default.position ->focuser_position 
+	focuser.default.position dup ->focuser_position 
+	cr ." return focus to " . 
 ;
 
 : User003_write-FITSfilepath_buffer { map buf -- }									\ VFX locals
