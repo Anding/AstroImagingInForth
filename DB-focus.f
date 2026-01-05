@@ -37,7 +37,5 @@ NEED ForthASTAP
 	s" UUID" map >string drop 24 + 12 buf write-buffer drop
 	s" .fits" buf write-buffer drop
 ;
-
 	ASSIGN user003_write-FITSfilepath_buffer TO-DO write-FITSfilepath_buffer
-
 

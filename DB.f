@@ -4,7 +4,7 @@
 include "%idir%\User001.f"
 
 \ define local values for this rig at this observatory
-2570	value focuser.default.position		\ typical focus position
+2280	value focuser.default.position		\ typical focus position
 6000  value focuser.default.maxsteps		\ just within full range of travel, to protect the telescope
 80		value focuser.default.backlash		\ as measured by experiment on this rig
 0			value focuser.default.reverse			\ focuser reverse depends on mounting direction
@@ -80,30 +80,4 @@ BEGIN-ENUMS DB_FITSfilterSpec
 END-ENUMS
 
 ASSIGN DB_FITSfilterSpec TO-DO FITSfilterSpec
-
-\ ForthXISF save-file file/path names
-: DB_write-XISFfilepath_buffer { map buf -- }
-
-	\ directory
-	s" e:\images\" buf write-buffer drop
-	s" NIGHTOF" map >string buf write-buffer drop 
-	'\' buf echo-buffer drop
-	s" OBJECT" map >string nip 0 = if
-		s" IMAGETYP" map >string buf write-buffer drop 
-	else
-		s" OBJECT" map >string buf write-buffer drop 
-	then
-	'\' buf echo-buffer drop
-	
-	buf buffer-punctuate-filepath
-	\ filename
-	s" FILTER" map >string buf write-buffer drop 
-	s" -F" buf write-buffer drop
-	s" FOCUSPOS" map >string buf write-buffer drop 
-	'-' buf echo-buffer drop
-	s" UUID" map >string drop 24 + 12 buf write-buffer drop
-	s" .xisf" buf write-buffer drop
-;
-
-	ASSIGN DB_write-XISFfilepath_buffer TO-DO write-XISFfilepath_buffer
 	
