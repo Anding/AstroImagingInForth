@@ -56,14 +56,11 @@ NEED ForthXISF
 	start-exposure
  	\ add FITS keys
  	image FITS_MAP @ add-cameraFITS 	 		\ must begin the FITS header with add-cameraFITS	
- 	image FITS_MAP @ add-observationFITS	\ call observationFITS before observationXISF to set the UUID
+ 	image FITS_MAP @ add-observationFITS
  	image FITS_MAP @ add-rigFITS	
  	image FITS_MAP @ add-wheelFITS
  	image FITS_MAP @ add-focuserFITS	
  	image FITS_MAP @ add-mountFITS
-	\ add mandatory XISF fields
- 	image XISF_MAP @ add-observationXISF	
- 	image XISF_MAP @ add-cameraXISF	  	
  	\ wait for the exposure to complete
 	camera_exposure 1000 / 100 + ms	
 	image IMAGE_BITMAP image image_size ( addr n) download-image
@@ -77,7 +74,7 @@ NEED ForthXISF
 	start-exposure
  	\ add FITS keys
  	image FITS_MAP @ add-cameraFITS 	 		\ must begin the FITS header with add-cameraFITS	
- 	image FITS_MAP @ add-observationFITS	\ call observationFITS before observationXISF to set the UUID
+ 	image FITS_MAP @ add-observationFITS
  	image FITS_MAP @ add-rigFITS	
  	image FITS_MAP @ add-wheelFITS
  	image FITS_MAP @ add-focuserFITS	

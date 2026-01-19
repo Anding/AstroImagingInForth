@@ -4,12 +4,13 @@
 include "%idir%\User001.f"
 
 \ define local values for this rig at this observatory
-2280	value focuser.default.position		\ typical focus position
-6000  value focuser.default.maxsteps		\ just within full range of travel, to protect the telescope
-80		value focuser.default.backlash		\ as measured by experiment on this rig
-0			value focuser.default.reverse			\ focuser reverse depends on mounting direction
+\ 2280	value focuser.default.position		( typical focus position, Takahashi focuser)
+5200    value focuser.default.position		( typical focus position, 2047 focuser)
+6000    value focuser.default.maxsteps		\ just within full range of travel, to protect the telescope
+80      value focuser.default.backlash		\ as measured by experiment on this rig
+0	    value focuser.default.reverse		\ focuser reverse depends on mounting direction
 100		value camera.default.gain
-0			value camera.default.offset
+0	    value camera.default.offset
 light frames
 
 \ populate expected hardware values (mainly for FITS key information)
@@ -19,7 +20,8 @@ s" 160.0"		 	$-> rig.aperature_dia
 s" 17000.0" 	$-> rig.aperature_area
 s" 530.0"			$-> rig.focal_len
 s" 3.3"				$-> rig.focal_ratio
-s" 4.2" 			$-> focuser.stepsize \ um / step
+\ s" 4.2" 			$-> focuser.stepsize ( um/step, Takahashi focuser)
+s" 2.8"             $-> focuser.stepsize ( um/step, 2047 focuser)
 s" Takahashi Epsilon 160ED " $-> rig.telescope
 s" github.com/Anding/AstroImagingInForth" $-> rig.software
 s" Anding" $-> obs.observer
@@ -34,8 +36,6 @@ s" Anding" $-> obs.observer
 	camera.default.offset ->camera_offset
 	\ allocate the ForthXISF image structure depending on the camera sensor size
 	camera_pixels 1 ( width height bitplanes) allocate-image ( img) -> image		
-	map ( forth-map) image FITS_map !
-	map ( forth-map) image XISF_map !	
 ;
 
 : finalize
