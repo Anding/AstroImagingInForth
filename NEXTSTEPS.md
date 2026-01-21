@@ -1,21 +1,17 @@
 ## Next Steps for Astroimaging in Forth
 
-1. Provide a facility to interrupt / abandon expsoures
+1. Live testing 
 
-2. Consider how to organize source files for different directions of abstraction
+2. Instrument driver code to utilize VT100UI.f
 
-3. Rename model and focus folders with a UUID suffix after the run (use a PS1 script)
+3. Develop further scripts
 
-4. Add a facility to abort auto-focus or mount-run using KEY and KEY?
+4. Example : a dedicated astro-focus package with a list of suitable focus stars
 
-5. A facility to apply a general flat frame to obtain a rough-calibrated image
+- Re-use skyregion code to find the nearest focus star
 
-6. A dedicated astro-focus package with a list of suitable focus stars
+- Take subframes around the focus star for speed
 
-6a. re-use skyregion code to find the nearest focus star
+- Adjust focus times to reduce saturation
 
-6b. Take subframes around the focus star for speed
-
-6c. Adjust focus times to reduce saturation
-
-6b. Ask Han for some saturation information in the analysis output files
+- Ask Han for some saturation information in the analysis output files

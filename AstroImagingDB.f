@@ -1,7 +1,7 @@
 \ setup a particular rig at a particular observatory
 
 \ the user file integrates the hardware (camera, focuser, filter-wheel and the mount) to create a user lexionary for interactive astroimaging
-include "%idir%\User001.f"
+include "%idir%\AstroImagingInForth.f"
 
 \ define local values for this rig at this observatory
 192 168 0 15 toIPv4 -> 10Micron.IP		
