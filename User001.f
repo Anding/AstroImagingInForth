@@ -1,10 +1,12 @@
 \ integrate the hardware (camera, focuser, filter-wheel and the mount) and extend the user lectionary for integrated hardware
+NEED ForthBase
 NEED Forth-map
 NEED ForthASI
 NEED ForthEFW
 NEED ForthEAF
 NEED Forth10Micron
 NEED ForthXISF
+NEED ForthASTAP
 NEED ForthVT100
 
 0 value image                           \ pointer to a ForthXISF image structure
@@ -14,6 +16,7 @@ NEED ForthVT100
 0 value focuser.default.reverse	        \ focuser reverse depends on mounting direction
 0 value camera.default.gain
 0 value camera.default.offset
+0 value camera.default.exposure
 
 : connect ( --)
 \ connect all hardware and allocate necessary resources
@@ -23,6 +26,7 @@ NEED ForthVT100
 	0 use-camera
 	camera.default.gain   ->camera_gain
 	camera.default.offset ->camera_offset
+	camera.default.exposure ->camera_exposure	
 	camera_pixels 1 ( width height bitplanes) allocate-image ( img) -> image	
 
 	scan-wheels
@@ -63,11 +67,10 @@ NEED ForthVT100
 	remove-mount
 ;
 
-: (expose) ( -- IOR)
+: <expose> ( --)
 \ internal word of expose
 	start-exposure
- 	\ add FITS keys
- 	image FITS_MAP @ add-cameraFITS 	 		\ must begin the FITS header with add-cameraFITS	
+ 	image FITS_MAP @ add-cameraFITS     \ must begin the FITS header with add-cameraFITS	
  	image FITS_MAP @ add-observationFITS
  	image FITS_MAP @ add-rigFITS	
  	image FITS_MAP @ add-wheelFITS
@@ -76,25 +79,39 @@ NEED ForthVT100
  	\ wait for the exposure to complete
 	camera_exposure 1000000 / ( secs)
 	dup 1 >= if 
-	    .countdown ( flag) ?dup if 
-	        cr ." exposure stopped" .>E cr exit 
-	    then
+	    .countdown ( flag) ?dup if cr abort" Exposure stopped" then \ abort through any running script
 	else
 	    camera_exposure 1000 / ms 
 	then
-	image IMAGE_BITMAP image image_size ( addr n) download-image 0 
+	image IMAGE_BITMAP image image_size ( addr n) download-image
 ;
+
+
+: XISFfilepath ( -- caddr u)
+\ return the XISF filename of the most recent image
+    image XISF_FILEPATH_BUFFER buffer-to-string
+; 
+
+: FITSfilepath ( -- caddr u)
+\ return the FITS filename of the most recent image
+    image FITS_FILEPATH_BUFFER buffer-to-string
+; 
+
+: FITSfolder ( img -- caddr u)
+\ return the FITS folder of the most recent image
+    image FITS_FILEPATH_BUFFER buffer-dir-to-string
+; 
 
 : expose ( --)
 \ take an image and save it in XISF format
-    (expose) if exit then 
+    <expose>
     image save-XISFimage					
-    cr image XISF_FILEPATH_BUFFER buffer-to-string .> cr
+    XISFfilepath cr .> cr
 ;
 
 : exposeFITS ( --)
 \ take an image and save it in FITS format
-    (expose) if exit then 
+    <expose>
 	image save-FITSimage					
-	CR image FITS_FILEPATH_BUFFER buffer-to-string type
+	FITSfilepath cr .> cr
 ;
