@@ -8,6 +8,7 @@ NEED Forth10Micron
 NEED ForthXISF
 NEED ForthASTAP
 NEED ForthVT100
+CLS
 
 0 value image                           \ pointer to a ForthXISF image structure
 0 value focuser.default.position        \ typical focus position
@@ -17,6 +18,7 @@ NEED ForthVT100
 0 value camera.default.gain
 0 value camera.default.offset
 0 value camera.default.exposure
+s" " $value aif.msg01
 
 : connect ( --)
 \ connect all hardware and allocate necessary resources
@@ -69,21 +71,31 @@ NEED ForthVT100
 
 : <expose> ( --)
 \ internal word of expose
+    s" starting " $-> aif.msg01 
+    camera_exposure 1000 / ( duration_ms)
+    dup dup 1000 >= if
+        1000 / (.) $+> aif.msg01 s"  second exposure..." $+> aif.msg01
+    else
+        (.) $+> aif.msg01 s"  milliscecond exposure..." $+> aif.msg01
+    then cr aif.msg01 .>
 	start-exposure
- 	image FITS_MAP @ add-cameraFITS     \ must begin the FITS header with add-cameraFITS	
- 	image FITS_MAP @ add-observationFITS
- 	image FITS_MAP @ add-rigFITS	
+	ticks                   ( duration_ms start)
+ 	image FITS_MAP @ add-cameraFITS            
+ 	image FITS_MAP @ add-observationFITS        
+ 	image FITS_MAP @ add-rigFITS   
  	image FITS_MAP @ add-wheelFITS
- 	image FITS_MAP @ add-focuserFITS	
- 	image FITS_MAP @ add-mountFITS
- 	\ wait for the exposure to complete
-	camera_exposure 1000000 / ( secs)
-	dup 1 >= if 
-	    .countdown ( flag) ?dup if cr abort" Exposure stopped" then \ abort through any running script
+ 	image FITS_MAP @ add-focuserFITS
+ 	image FITS_MAP @ add-mountFITS              
+ 	ticks swap - 0 max      ( duration_ms elapsed_ms)   \ beware rollover of ticks counter
+	- dup                   ( remaining_ms)
+	1000 >= if 
+	    1000 / ( S) .countdown ( flag) ?dup if s" Exposure stopped" .>E abort then \ abort through any running script
 	else
-	    camera_exposure 1000 / ms 
+	    ms 
 	then
+	s" downloading image..." .>
 	image IMAGE_BITMAP image image_size ( addr n) download-image
+	s" saving image..." .>
 ;
 
 
@@ -106,12 +118,12 @@ NEED ForthVT100
 \ take an image and save it in XISF format
     <expose>
     image save-XISFimage					
-    XISFfilepath cr .> cr
+    XISFfilepath .> cr
 ;
 
 : exposeFITS ( --)
 \ take an image and save it in FITS format
     <expose>
 	image save-FITSimage					
-	FITSfilepath cr .> cr
+	FITSfilepath .> cr
 ;

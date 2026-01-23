@@ -11,7 +11,7 @@ include "%idir%\AstroImagingInForth.f"
 0       -> focuser.default.reverse		\ focuser reverse depends on mounting direction
 100     -> camera.default.gain
 0       -> camera.default.offset
-20      -> camera.default.exposure			
+20 Secs -> camera.default.exposure			
 s" 160.0"		 	$-> rig.aperature_dia
 s" 17000.0"         $-> rig.aperature_area
 s" 530.0"			$-> rig.focal_len
