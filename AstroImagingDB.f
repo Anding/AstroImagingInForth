@@ -7,7 +7,7 @@ include "%idir%\AstroImagingInForth.f"
 192 168 0 15 toIPv4 -> 10Micron.IP		
 5200    -> focuser.default.position		\ "2047 focuser": 5200; Takahashi focuser: 2280
 6000    -> focuser.default.maxsteps		\ just within full range of travel, to protect the telescope
-80      -> focuser.default.backlash		\ as measured by experiment on this rig
+80      -> focuser.default.backlash		\ as measured by experiment on this rig\
 0       -> focuser.default.reverse		\ focuser reverse depends on mounting direction
 100     -> camera.default.gain
 0       -> camera.default.offset
@@ -28,7 +28,7 @@ BEGIN-ENUM
 	+ENUM RED
 	+ENUM GREEN
 	+ENUM BLUE
-	+ENUM H-ALPHA
+	+ENUM Ha
 	+ENUM SII
 	+ENUM OIII
 END-ENUM
@@ -47,12 +47,12 @@ ASSIGN DB_filterBand TO-DO filterBand
 	
 BEGIN-ENUMS DB_filterSpec
 	+" Astronomik UV-IR-BLOCK L-2"
-	+" Astronomik Deep-Sky RGB"
-	+" Astronomik Deep-Sky RGB"
-	+" Astronomik Deep-Sky RGB"
-	+" Astronomik MaxFR 6nm"
-	+" Astronomik MaxFR 6nm"
-	+" Astronomik MaxFR 6nm"
+	+" Astronomik Deep-Sky Red"
+	+" Astronomik Deep-Sky Green"
+	+" Astronomik Deep-Sky Blue"
+	+" Astronomik MaxFR 6nm H-alpha"
+	+" Astronomik MaxFR 6nm SII"
+	+" Astronomik MaxFR 6nm OIII"
 END-ENUMS
 
 ASSIGN DB_filterSpec TO-DO filterSpec

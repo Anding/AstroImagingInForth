@@ -22,28 +22,25 @@ s" " $value aif.msg01
 
 : connect ( --)
 \ connect all hardware and allocate necessary resources
-
-	scan-cameras 
+    cr s" connecting..." .>
 	0 add-camera
 	0 use-camera
 	camera.default.gain   ->camera_gain
 	camera.default.offset ->camera_offset
 	camera.default.exposure ->camera_exposure	
 	camera_pixels 1 ( width height bitplanes) allocate-image ( img) -> image	
-
-	scan-wheels
+    -cr
 	0 add-wheel
 	0 use-wheel
 	0 ->wheel_position
-	
-	scan-focusers
+    -cr	
 	0 add-focuser
 	0 use-focuser
 	focuser.default.reverse  ->focuser_reverse
 	focuser.default.backlash ->focuser_backlash
 	focuser.default.maxsteps ->focuser_maxsteps
 	focuser.default.position ->focuser_position	
-	
+	-cr
 	add-mount	
 ;
 
@@ -57,15 +54,13 @@ s" " $value aif.msg01
 
 : disconnect ( --)
 \ disconnect all hardware and free accociated resources
-    0 ->wheel_position wait-wheel
+    cr s" disconnecting..." .>   
+    wait-wheel 0 ->wheel_position
 	0 remove-wheel
-	
-	focuser.default.position ->focuser_position wait-focuser
+	wait-focuser focuser.default.position ->focuser_position
 	0 remove-focuser
-	
 	0 remove-camera	
     image free-image
-    
 	remove-mount
 ;
 
