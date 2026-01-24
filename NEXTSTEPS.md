@@ -1,21 +1,23 @@
 ## Next Steps for Astroimaging in Forth
 
-1. Live testing, improve script reporting with ForthVT100
+- Opimize expose route to exclude mount fits for exposures of less than 10 seconds, and to exclude any ms delay
 
-2. Develop script-focus to utilize subframes, integrate with ForthASTAP
+- Live testing, improve script reporting with ForthVT100
 
-3. Develop script-model to handle model building through 10micron control words
+- Develop script-focus to utilize subframes, integrate with ForthASTAP
 
-4. Develop further scripts
+- Develop script-model to handle model building through 10micron control words
 
-5. Example: auto-flats
+- Develop further scripts
 
-6. Example : a dedicated astro-focus package with a list of suitable focus stars
+- Example: auto-flats
 
-- Re-use skyregion code to find the nearest focus star
+- Example : a dedicated astro-focus package with a list of suitable focus stars
 
-- Take subframes around the focus star for speed
+-   Re-use skyregion code to find the nearest focus star
 
-- Adjust focus times to reduce saturation
+-   Take subframes around the focus star for speed
 
-- Ask Han for some saturation information in the analysis output files
+-   Adjust focus times to reduce saturation
+
+-   Ask Han for some saturation information in the analysis output files
