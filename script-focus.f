@@ -1,7 +1,7 @@
 \ script for taking autofocus images
 
-21 value autofocus.points			\ prefer an odd number
-10 value autofocus.increment
+11 value autofocus.points			\ prefer an odd number
+20 value autofocus.increment
 s" 000000000000" $value autofocus.UUID
 0  value autofocus.saveXT
 
@@ -29,9 +29,9 @@ s" 000000000000" $value autofocus.UUID
 \ obtain some images for autofocus
 
     \ set the save filepath
-    ACTION-OF write-FITSfilepath -> model.saveXT
+    ACTION-OF write-FITSfilepath -> autofocus.saveXT
 	ASSIGN autofocus.write-FITSfilepath TO-DO write-FITSfilepath
-    UUID $-> model.UUID	
+    UUID $-> autofocus.UUID	
         
 	focuser.default.position autofocus.points 2 / 1+ autofocus.increment * + 	( f_high)
 	focuser.default.position autofocus.points 2 / autofocus.increment * - 		( f_low)
@@ -42,6 +42,9 @@ s" 000000000000" $value autofocus.UUID
 	autofocus.increment +loop
 	focuser.default.position dup ->focuser_position 
 	cr s" return focus to " .>
+	
+	\ restore the save filepath
+    autofocus.saveXT TO-DO write-FITSfilepath
 ;
 
 

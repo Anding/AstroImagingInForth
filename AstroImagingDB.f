@@ -5,7 +5,7 @@ include "%idir%\AstroImagingInForth.f"
 
 \ define local values for this rig at this observatory
 192 168 0 15 toIPv4 -> 10Micron.IP		
-5200    -> focuser.default.position		\ "2047 focuser": 5200; Takahashi focuser: 2280
+5100    -> focuser.default.position		\ "2047 focuser": 5100; Takahashi focuser: 2280
 6000    -> focuser.default.maxsteps		\ just within full range of travel, to protect the telescope
 80      -> focuser.default.backlash		\ as measured by experiment on this rig\
 0       -> focuser.default.reverse		\ focuser reverse depends on mounting direction

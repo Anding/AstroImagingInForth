@@ -1,6 +1,6 @@
 ## Next Steps for Astroimaging in Forth
 
-1. Live testing 
+1. Live testing, improve script reporting with ForthVT100
 
 2. Develop script-focus to utilize subframes, integrate with ForthASTAP
 
@@ -8,7 +8,7 @@
 
 4. Develop further scripts
 
-5. Example: flats control
+5. Example: auto-flats
 
 6. Example : a dedicated astro-focus package with a list of suitable focus stars
 
