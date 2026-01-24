@@ -2,11 +2,15 @@
 
 1. Live testing 
 
-2. Instrument driver code to utilize VT100UI.f
+2. Develop script-focus to utilize subframes, integrate with ForthASTAP
 
-3. Develop further scripts
+3. Develop script-model to handle model building through 10micron control words
 
-4. Example : a dedicated astro-focus package with a list of suitable focus stars
+4. Develop further scripts
+
+5. Example: flats control
+
+6. Example : a dedicated astro-focus package with a list of suitable focus stars
 
 - Re-use skyregion code to find the nearest focus star
 
