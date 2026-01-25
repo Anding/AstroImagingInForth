@@ -106,7 +106,7 @@ s" " $value aif.msg01
 
 : FITSfolder ( img -- caddr u)
 \ return the FITS folder of the most recent image
-    image FITS_FILEPATH_BUFFER buffer-dir-to-string
+    image FITS_FILEPATH_BUFFER buffer-folder-to-string
 ; 
 
 : expose ( --)

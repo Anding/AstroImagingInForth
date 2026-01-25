@@ -4,8 +4,6 @@
 
 - Live testing, improve script reporting with ForthVT100
 
-- Develop script-focus to utilize subframes, integrate with ForthASTAP
-
 - Develop script-model to handle model building through 10micron control words
 
 - Develop further scripts
