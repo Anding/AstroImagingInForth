@@ -38,15 +38,11 @@ s" 000000000000" $value model.UUID
 	s" OBJCTAZ"  map >string BL csplit buf write-buffer drop 2drop	
 	s" .fits" buf write-buffer drop
 ;
-    
-: modelPoints ( --)
-\ obtain some model points
 
-    \ set the save filepath  
-    ACTION-OF write-FITSfilepath -> model.saveXT
-	ASSIGN model.write-FITSfilepath TO-DO write-FITSfilepath
-    UUID $-> model.UUID	
-	
+defer modelPoints 
+    
+: def_modelPoints ( --)
+\ obtain some model points
     80 00 00 Alt 090 00 00 Az model-point
     75 00 00 Alt 120 00 00 Az model-point
     65 00 00 Alt 180 00 00 Az model-point
@@ -55,8 +51,28 @@ s" 000000000000" $value model.UUID
     50 00 00 Alt 180 00 00 Az model-point
     45 00 00 Alt 150 00 00 Az model-point
     40 00 00 Alt 120 00 00 Az model-point
+;
+
+assign def_modelPoints todo modelPoints 
+
+: make-model 
+    \ set the save filepath  
+    ACTION-OF write-FITSfilepath -> model.saveXT
+	ASSIGN model.write-FITSfilepath TO-DO write-FITSfilepath
+    UUID $-> model.UUI
+    
+    modelPoints  
     
     \ restore the save filepath
     model.saveXT TO-DO write-FITSfilepath
-;
 
+    \ create the model
+    FITSfolder astap.folder-to-ALPT
+    0= if 
+        new-alignment-model 
+    else 
+        s" failed to create alignment points" .>E cr exit 
+    then
+    
+    .alignment
+;
