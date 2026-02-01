@@ -47,12 +47,12 @@ defer modelPoints
     
 : def_modelPoints ( --)
 \ obtain some model points
-\    80 00 00 Alt 090 00 00 Az model-point
-\    75 00 00 Alt 120 00 00 Az model-point
-\    65 00 00 Alt 180 00 00 Az model-point
-\    60 00 00 Alt 240 00 00 Az model-point
-\    55 00 00 Alt 210 00 00 Az model-point
-\    50 00 00 Alt 180 00 00 Az model-point
+    80 00 00 Alt 090 00 00 Az model-point
+    75 00 00 Alt 120 00 00 Az model-point
+    65 00 00 Alt 180 00 00 Az model-point
+    60 00 00 Alt 240 00 00 Az model-point
+    55 00 00 Alt 210 00 00 Az model-point
+    50 00 00 Alt 180 00 00 Az model-point
     45 00 00 Alt 150 00 00 Az model-point
     40 00 00 Alt 120 00 00 Az model-point
 ;
@@ -77,6 +77,7 @@ assign def_modelPoints to-do modelPoints
     \ restore the save filepath and exposure duration
     model.save.XT TO-DO write-FITSfilepath
     model.save.exposure	duration
+    -cr
     park
 
     \ create the model
