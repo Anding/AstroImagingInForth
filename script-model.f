@@ -1,7 +1,9 @@
 \ script for taking model points
 
+20 Secs -> model.default.exposure
+0 value model.save.exposure	
 s" 000000000000" $value model.UUID
-0 value model.saveXT
+0 value model.save.XT
 
 : model-point ( Alt Az -- )
 \ slew to Alt Az and continue tracking
@@ -56,23 +58,32 @@ defer modelPoints
 assign def_modelPoints todo modelPoints 
 
 : make-model 
-    \ set the save filepath  
-    ACTION-OF write-FITSfilepath -> model.saveXT
+    \ set the save filepath and exposure duration
+    ACTION-OF write-FITSfilepath -> model.save.XT
 	ASSIGN model.write-FITSfilepath TO-DO write-FITSfilepath
     UUID $-> model.UUI
+    model.default.exposure duration    
     
+    
+    s" backup and delete current model" .> cr
+    s" backup" save-alignment-model
+    delete-alignment-model
     modelPoints  
     
-    \ restore the save filepath
-    model.saveXT TO-DO write-FITSfilepath
+    \ restore the save filepath and exposure duration
+    model.save.XT TO-DO write-FITSfilepath
+    model.save.exposure	duration
 
     \ create the model
     FITSfolder astap.folder-to-ALPT
     0= if 
         new-alignment-model 
-    else 
-        s" failed to create alignment points" .>E cr exit 
+        0= if 
+            .alignment 
+            exit
+        then 
     then
-    
-    .alignment
+     
+    s" failed to create new model, reload from backup" .>E cr
+    s" backup" load-alignment-model
 ;

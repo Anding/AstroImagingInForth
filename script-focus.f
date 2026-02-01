@@ -2,9 +2,11 @@
 
 11 value autofocus.points			\ prefer an odd number
 20 value autofocus.increment
+20 secs value autofocus.exposure
 s" 000000000000" $value autofocus.UUID
 s" " $value autofocus.str1
-0  value autofocus.saveXT
+0  value autofocus.save.XT
+0  value autofocus.save.exposure
 
 : autofocus.write-FITSfilepath { map buf -- }									\ VFX locals
 \ map is a completed FITSKEY map that will interrogated to create the filename
@@ -29,10 +31,11 @@ s" " $value autofocus.str1
 : focus-bracket ( -- )
 \ obtain some images for autofocus
 
-    \ set the save filepath
-    ACTION-OF write-FITSfilepath -> autofocus.saveXT
+    \ set the save filepath and exposure duration
+    ACTION-OF write-FITSfilepath -> autofocus.save.XT
 	ASSIGN autofocus.write-FITSfilepath TO-DO write-FITSfilepath
     UUID $-> autofocus.UUID	
+    autofocus.default.exposure duration
    
     30 subframe \ 30% square subframe for speed        
 	focuser.default.position autofocus.points 2 / 1+ autofocus.increment * + 	( f_high)
@@ -44,8 +47,9 @@ s" " $value autofocus.str1
 	focuser.default.position focus-at
 	fullframe
 	
-	\ restore the save filepath
-    autofocus.saveXT TO-DO write-FITSfilepath
+	\ restore the save filepath and duration
+    autofocus.save.XT TO-DO write-FITSfilepath
+    autofocus.save.exposure duration
 ;
 
 : autofocus ( --)
