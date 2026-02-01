@@ -22,7 +22,7 @@ s" " $value aif.msg01
 
 : connect ( --)
 \ connect all hardware and allocate necessary resources
-    cr s" connecting..." .>
+    cr s" connecting..." .> -cr
 	0 add-camera
 	0 use-camera
 	camera.default.gain   ->camera_gain
