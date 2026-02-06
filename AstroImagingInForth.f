@@ -54,7 +54,7 @@ s" " $value aif.msg01
 
 : disconnect ( --)
 \ disconnect all hardware and free accociated resources
-    cr s" disconnecting..." .>   
+    cr s" Disconnecting..." .>   
     wait-wheel 0 ->wheel_position
 	0 remove-wheel
 	wait-focuser focuser.default.position ->focuser_position
@@ -62,17 +62,18 @@ s" " $value aif.msg01
 	0 remove-camera	
     image free-image
 	remove-mount
+	s" Disconnected" .>   
 ;
 
 : <expose> ( --)
 \ internal word of expose
-    s" starting " $-> aif.msg01 
+    s" Starting " $-> aif.msg01 
     camera_exposure 1000 / ( duration_ms)
     dup dup 1000 >= if
         1000 / (.) $+> aif.msg01 s"  second exposure..." $+> aif.msg01
     else
         (.) $+> aif.msg01 s"  milliscecond exposure..." $+> aif.msg01
-    then cr aif.msg01 .>
+    then aif.msg01 .>
 	start-exposure
 	ticks                   ( duration_ms start)
  	image FITS_MAP @ add-cameraFITS            
@@ -89,6 +90,7 @@ s" " $value aif.msg01
 	    ms 
 	then
 	s" downloading image..." .>
+	image initialize-image
 	image IMAGE_BITMAP image image_size ( addr n) download-image
 	s" saving image..." .>
 ;
@@ -113,12 +115,12 @@ s" " $value aif.msg01
 \ take an image and save it in XISF format
     <expose>
     image save-XISFimage					
-    XISFfilepath .> cr
+    XISFfilepath .>
 ;
 
 : exposeFITS ( --)
 \ take an image and save it in FITS format
     <expose>
 	image save-FITSimage					
-	FITSfilepath .> cr
+	FITSfilepath .>
 ;

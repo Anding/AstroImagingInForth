@@ -35,14 +35,15 @@ s" " $value autofocus.str1
     ACTION-OF write-FITSfilepath -> autofocus.save.XT
 	ASSIGN autofocus.write-FITSfilepath TO-DO write-FITSfilepath
     UUID $-> autofocus.UUID	
-    autofocus.default.exposure duration
+    camera_exposure -> autofocus.save.exposure
+    autofocus.exposure duration
    
     30 subframe \ 30% square subframe for speed        
 	focuser.default.position autofocus.points 2 / 1+ autofocus.increment * + 	( f_high)
 	focuser.default.position autofocus.points 2 / autofocus.increment * - 		( f_low)
 	do
-	 i focus-at -cr
-	  exposeFITS -cr
+	 i focus-at
+	  exposeFITS
 	  autofocus.increment +loop
 	focuser.default.position focus-at
 	fullframe
@@ -60,7 +61,7 @@ s" " $value autofocus.str1
         s" ATAP found focus.  Refocusing at..." .>
         focus-at drop
     else
-        s" Failed to autofocus" .> cr
+        s" Failed to autofocus" .>
     then
 ;
 

@@ -10,16 +10,9 @@ s" " $value model.str1
 \ slew to Alt Az and continue tracking
 \ expose an image
 \ plate solve
-  2dup swap s" Model point at Alt " $-> model.str1 <.ALT> $+> model.str1 s"  Az " $+> model.str1 <.AZ> $+> model.str1  model.str1 .>
+\  2dup swap s" Model point at Alt " $-> model.str1 <.ALT> $+> model.str1 s"  Az " $+> model.str1 <.AZ> $+> model.str1  model.str1 .>
 	gotoAltAz
-	-cr -cr -cr 
 	exposeFITS
-	FITSfilepath platesolve 
-	0= if 
-		2drop s" Plate solve successful" .> cr
-    else
-		s" Plate solve failed" .>E cr
-	then
 ;
 
 : model.write-FITSfilepath { map buf -- }									
@@ -46,21 +39,27 @@ s" " $value model.str1
 defer modelPoints 
     
 : def_modelPoints ( --)
-\ obtain some model points
-    80 00 00 Alt 090 00 00 Az model-point
-    75 00 00 Alt 120 00 00 Az model-point
-    65 00 00 Alt 180 00 00 Az model-point
-    60 00 00 Alt 240 00 00 Az model-point
-    55 00 00 Alt 210 00 00 Az model-point
+\ obtain 14 model points
+    80 00 00 Alt 060 00 00 Az model-point
+    75 00 00 Alt 080 00 00 Az model-point
+    70 00 00 Alt 100 00 00 Az model-point
+    65 00 00 Alt 120 00 00 Az model-point
+    60 00 00 Alt 140 00 00 Az model-point
+    55 00 00 Alt 160 00 00 Az model-point
     50 00 00 Alt 180 00 00 Az model-point
-    45 00 00 Alt 150 00 00 Az model-point
-    40 00 00 Alt 120 00 00 Az model-point
+    80 00 00 Alt 180 00 00 Az model-point
+    75 00 00 Alt 200 00 00 Az model-point
+    70 00 00 Alt 220 00 00 Az model-point
+    65 00 00 Alt 240 00 00 Az model-point
+    60 00 00 Alt 260 00 00 Az model-point
+    55 00 00 Alt 280 00 00 Az model-point
+    50 00 00 Alt 300 00 00 Az model-point
 ;
 
 assign def_modelPoints to-do modelPoints 
 
 : make-model 
-    
+    cr
     \ set the save filepath and exposure duration
     ACTION-OF write-FITSfilepath -> model.save.XT
 	ASSIGN model.write-FITSfilepath TO-DO write-FITSfilepath
@@ -68,19 +67,20 @@ assign def_modelPoints to-do modelPoints
     camera_exposure -> model.save.exposure
     model.default.exposure duration    
     
-    park
-    s" backup and delete current model" .> cr
+    s" Backup and delete current model" .> cr
     s" backup" save-alignment-model
+    park
     delete-alignment-model
     modelPoints  
     
     \ restore the save filepath and exposure duration
     model.save.XT TO-DO write-FITSfilepath
     model.save.exposure	duration
-    -cr
     park
 
     \ create the model
+    s" Plate solving" .> cr
+    FITSfolder ASTAP.solveFolder
     FITSfolder astap.folder-to-ALPT
     0= if 
         new-alignment-model 
@@ -89,6 +89,6 @@ assign def_modelPoints to-do modelPoints
             exit
         then 
     then
-    s" Failed to create new model.  Reload from backup" .>E cr
+    s" Failed to create new model.  Reload from backup" .>E
     s" backup" load-alignment-model
 ;

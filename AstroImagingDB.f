@@ -21,6 +21,8 @@ s" Takahashi Epsilon 160ED " $-> rig.telescope
 s" github.com/Anding/AstroImagingInForth" $-> rig.software
 s" Anding" $-> obs.observer
 light frames
+
+STANDARD-OUTPUT \ ForthVT100 reporting
 	
 \ filter wheel settings
 BEGIN-ENUM
