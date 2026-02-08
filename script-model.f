@@ -12,7 +12,7 @@ s" " $value model.str1
 \ plate solve
 \  2dup swap s" Model point at Alt " $-> model.str1 <.ALT> $+> model.str1 s"  Az " $+> model.str1 <.AZ> $+> model.str1  model.str1 .>
 	gotoAltAz
-	exposeFITS
+	exposeFITS cr
 ;
 
 : model.write-FITSfilepath { map buf -- }									

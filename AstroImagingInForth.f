@@ -67,6 +67,7 @@ s" " $value aif.msg01
 
 : <expose> ( --)
 \ internal word of expose
+    cr
     s" Starting " $-> aif.msg01 
     camera_exposure 1000 / ( duration_ms)
     dup dup 1000 >= if
