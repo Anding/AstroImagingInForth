@@ -58,4 +58,7 @@ BEGIN-ENUMS DB_filterSpec
 END-ENUMS
 
 ASSIGN DB_filterSpec TO-DO filterSpec
-	
+
+include "%idir%/script-focus"
+include "%idir%/script-model"	
+include "%idir%/script-random"

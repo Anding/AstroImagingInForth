@@ -40,7 +40,7 @@ defer modelPoints
     
 : def_modelPoints ( --)
 \ obtain 14 model points
-    80 00 00 Alt 060 00 00 Az model-point
+    
     75 00 00 Alt 080 00 00 Az model-point
     70 00 00 Alt 100 00 00 Az model-point
     65 00 00 Alt 120 00 00 Az model-point
